@@ -1,97 +1,60 @@
-name: Validate 1.2.02 Windows candidates
+name: Verify macOS and FFmpeg draft downloads
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [build/windows-package-check]
+    paths: [.github/workflows/windows-package-check.yml]
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  validate:
-    runs-on: windows-2022
-    timeout-minutes: 22
+  verify:
+    if: github.run_attempt == 1 && github.actor == 'BettaChan'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
     steps:
-      - name: Download published candidate assets
-        shell: pwsh
+      - name: Download four draft assets and revoke the job token
+        shell: bash
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true
-          $prefix = 'DazuiSubtitle-1.2.02-windows-x64-rebuilt'
-          $candidate = "$env:RUNNER_TEMP/ToucanCheck"
-          New-Item -ItemType Directory $candidate | Out-Null
-          $checksums = @{
-            "$prefix.exe" = '6aeda4adc93db4cff8576227f2bc94074d91294e7d43b65d1a4f1abbdd0aecff'
-            "$prefix.zip" = 'de4e9197447b1c93f29fd4f173d9dd33a4c71bb2b928e99807446137e8bf3bf4'
+          set -euo pipefail
+          revoke() {
+            curl --fail --silent --show-error --request DELETE \
+              --header "Authorization: Bearer $GH_TOKEN" "$GITHUB_API_URL/installation/token"
           }
-          for ($i = 0; $i -lt 30; $i++) {
-            $releases = gh api "repos/$env:GITHUB_REPOSITORY/releases?per_page=50" | ConvertFrom-Json
-            $draft = @($releases | Where-Object { !$_.draft -and $_.tag_name -eq 'v1.2.02' })
-            if ($draft.Count -ne 1) { throw 'The published v1.2.02 release was not found.' }
-            $assets = @($draft[0].assets | Where-Object { $checksums.ContainsKey($_.name) -and $_.state -eq 'uploaded' })
-            if ($assets.Count -eq 2) { break }
-            Start-Sleep -Seconds 20
-          }
-          if ($assets.Count -ne 2) { throw 'Both published candidate assets were not visible to the runner.' }
-          foreach ($asset in $assets) {
-            $path = Join-Path $candidate $asset.name
-            curl.exe --fail --silent --show-error --location --max-time 300 --output $path               --header "Authorization: Bearer $env:GH_TOKEN" --header 'Accept: application/octet-stream'               "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/assets/$($asset.id)"
-            if ((Get-FileHash $path -Algorithm SHA256).Hash.ToLowerInvariant() -ne $checksums[$asset.name]) {
-              throw "Unexpected candidate checksum: $($asset.name)"
-            }
-          }
-          'Both draft asset checksums matched.'
-          "TOUCAN_CHECK=$candidate" >> $env:GITHUB_ENV
+          trap revoke EXIT
+          mkdir "$RUNNER_TEMP/toucan-download-check"
+          cd "$RUNNER_TEMP/toucan-download-check"
+          gh api "repos/$GITHUB_REPOSITORY/releases?per_page=50" \
+            --jq 'map(select(.draft and (.name | endswith("1.2.02")))) | if length == 1 then .[0].assets else error("Expected one 1.2.02 draft") end' > assets.json
+          for name in DazuiSubtitle-1.2.02-mac-arm64.dmg DazuiSubtitle-1.2.02-mac-arm64.zip ffmpeg-source-1.2.02.zip electron-44.0.0-ffmpeg-source.tar.gz; do
+            asset_id=$(jq -er --arg name "$name" '.[] | select(.name == $name and .state == "uploaded") | .id' assets.json)
+            [[ "$asset_id" =~ ^[0-9]+$ ]]
+            curl --fail --silent --show-error --location --max-time 180 \
+              --header "Authorization: Bearer $GH_TOKEN" --header 'Accept: application/octet-stream' \
+              --output "$name" "$GITHUB_API_URL/repos/$GITHUB_REPOSITORY/releases/assets/$asset_id"
+          done
+          revoke
+          trap - EXIT
+          unset GH_TOKEN
+          echo 'Downloaded all four assets and revoked the job token.'
 
-      - name: Install, launch, run offline diagnostics, and transcribe
-        shell: pwsh
+      - name: Check SHA-256 and archive integrity
+        shell: bash
         run: |
-          $ErrorActionPreference = 'Stop'
-          $PSNativeCommandUseErrorActionPreference = $true
-          $root = $env:TOUCAN_CHECK
-          $prefix = 'DazuiSubtitle-1.2.02-windows-x64-rebuilt'
-          $installed = Join-Path $root 'Installed'
-          $portable = Join-Path $root 'Portable'
-          $setup = Start-Process -FilePath (Join-Path $root "$prefix.exe") -ArgumentList '/S', "/D=$installed" -Wait -PassThru
-          if ($setup.ExitCode -ne 0) { throw "NSIS installer failed: $($setup.ExitCode)" }
-          Expand-Archive -LiteralPath (Join-Path $root "$prefix.zip") -DestinationPath $portable
-          $env:PYTHONDONTWRITEBYTECODE = '1'
-          $env:PYTHONUTF8 = '1'
-          $env:HF_HOME = Join-Path $root 'ModelCache'
-          foreach ($app in @($installed, $portable)) {
-            $flavor = Split-Path $app -Leaf
-            $launcher = @(Get-ChildItem -LiteralPath $app -Filter '*.exe' | Where-Object { $_.Name -notmatch '^(DazuiSubtitleCore|Uninstall)' })
-            if ($launcher.Count -ne 1) { throw "Missing or ambiguous launcher: $flavor" }
-            $env:SUBTITLE_USER_DATA = Join-Path $root "$flavor-profile"
-            $process = Start-Process -FilePath $launcher[0].FullName -WorkingDirectory $app -PassThru
-            try {
-              for ($i = 0; $i -lt 45; $i++) {
-                $log = @(Get-ChildItem "$env:SUBTITLE_USER_DATA/logs/startup/startup-*.jsonl" -ErrorAction SilentlyContinue)
-                $events = @($log | ForEach-Object { Get-Content -LiteralPath $_.FullName | ConvertFrom-Json -ErrorAction SilentlyContinue })
-                if ($events.event -contains 'window-did-finish-load' -or $process.HasExited) { break }
-                Start-Sleep -Seconds 1
-              }
-              if ($events.event -notcontains 'window-did-finish-load') {
-                Write-Host ('Startup events: ' + ($events.event -join ', '))
-                throw "App window failed to load: $flavor"
-              }
-            } finally {
-              if (!$process.HasExited) {
-                $PSNativeCommandUseErrorActionPreference = $false
-                taskkill.exe /PID $process.Id /T /F | Out-Null
-                $PSNativeCommandUseErrorActionPreference = $true
-              }
-            }
-            $python = Join-Path $app 'resources/python-runtime/python/python.exe'
-            & $python (Join-Path $app 'resources/python/engine_probe.py')
-            & $python -c 'import numpy as n; a=n.arange(8.); n.testing.assert_allclose(n.fft.ifft(n.fft.fft(a)).real,a,atol=1e-12); assert a @ a == 140'
-            $audio = Join-Path $root "$flavor.flac"
-            curl.exe --fail --silent --show-error --location --output $audio 'https://raw.githubusercontent.com/openai/whisper/86098128c0b4f24f0e2aa2994de830614b474227/tests/jfk.flac'
-            if ((Get-FileHash $audio -Algorithm SHA256).Hash.ToLowerInvariant() -ne '63a4b1e4c1dc655ac70961ffbf518acd249df237e5a0152faae9a4a836949715') { throw 'Audio fixture checksum mismatch' }
-            $ffmpeg = Join-Path $app 'resources/python-runtime/bin/ffmpeg.exe'
-            & $python (Join-Path $app 'resources/python/video2srt_ollama.py') $audio --ffmpeg $ffmpeg --engine faster --device cpu --whisper-size tiny --whisper-lang en --whisper-only
-            $captions = Get-Content -LiteralPath ([IO.Path]::ChangeExtension($audio, '.srt')) -Raw
-            if ($captions -notmatch '(?i)country' -or $captions -notmatch '-->') { throw "Missing test speech in output: $flavor" }
-            Write-Host "$flavor passed launch, offline VAD, NumPy, and FFmpeg-to-Whisper transcription."
-          }
+          set -euo pipefail
+          cd "$RUNNER_TEMP/toucan-download-check"
+          sha256sum --strict -c <<'SUMS'
+          52e0239c97a57b271d91f1cf2d8c6a17a7d4d4eeb5fc17470787df9c8d48b51c  DazuiSubtitle-1.2.02-mac-arm64.dmg
+          d357af58aa1f7d29b18e0780cefdabca63acff91f6bc28e8f8aaf1ca130f691a  DazuiSubtitle-1.2.02-mac-arm64.zip
+          e15f618c55d2ebe4b54dba048084132cc7846a3c761ec63e4d145050a851224a  ffmpeg-source-1.2.02.zip
+          54bd54be5325af9163b6ccbda2a4ca665e0e97e2f643b5e9d8004407b827d076  electron-44.0.0-ffmpeg-source.tar.gz
+          SUMS
+          unzip -tq DazuiSubtitle-1.2.02-mac-arm64.zip
+          unzip -tq ffmpeg-source-1.2.02.zip
+          gzip -t electron-44.0.0-ffmpeg-source.tar.gz
+          tar -tzf electron-44.0.0-ffmpeg-source.tar.gz > /dev/null
+          echo 'All four SHA-256 checks and all three archive integrity checks passed.'
