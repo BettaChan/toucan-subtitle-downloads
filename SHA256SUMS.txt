@@ -1,0 +1,5 @@
+52e0239c97a57b271d91f1cf2d8c6a17a7d4d4eeb5fc17470787df9c8d48b51c  DazuiSubtitle-1.2.02-mac-arm64.dmg
+d357af58aa1f7d29b18e0780cefdabca63acff91f6bc28e8f8aaf1ca130f691a  DazuiSubtitle-1.2.02-mac-arm64.zip
+b960e43fe722da86728c97b3d2b10a230d19516cbe3b057810e4c8cf41389e5a  DazuiSubtitle-1.2.02-windows-x64.exe
+523862bcf018dd24226f8c222cf066be70ed6a6e1e51c34fe4666c972cfcdf6a  DazuiSubtitle-1.2.02-windows-x64.zip
+e15f618c55d2ebe4b54dba048084132cc7846a3c761ec63e4d145050a851224a  ffmpeg-source-1.2.02.zip
