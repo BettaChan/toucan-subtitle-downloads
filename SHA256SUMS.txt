@@ -1,5 +1,6 @@
 52e0239c97a57b271d91f1cf2d8c6a17a7d4d4eeb5fc17470787df9c8d48b51c  DazuiSubtitle-1.2.02-mac-arm64.dmg
 d357af58aa1f7d29b18e0780cefdabca63acff91f6bc28e8f8aaf1ca130f691a  DazuiSubtitle-1.2.02-mac-arm64.zip
-b960e43fe722da86728c97b3d2b10a230d19516cbe3b057810e4c8cf41389e5a  DazuiSubtitle-1.2.02-windows-x64.exe
-523862bcf018dd24226f8c222cf066be70ed6a6e1e51c34fe4666c972cfcdf6a  DazuiSubtitle-1.2.02-windows-x64.zip
+6aeda4adc93db4cff8576227f2bc94074d91294e7d43b65d1a4f1abbdd0aecff  DazuiSubtitle-1.2.02-windows-x64-rebuilt.exe
+de4e9197447b1c93f29fd4f173d9dd33a4c71bb2b928e99807446137e8bf3bf4  DazuiSubtitle-1.2.02-windows-x64-rebuilt.zip
 e15f618c55d2ebe4b54dba048084132cc7846a3c761ec63e4d145050a851224a  ffmpeg-source-1.2.02.zip
+54bd54be5325af9163b6ccbda2a4ca665e0e97e2f643b5e9d8004407b827d076  electron-44.0.0-ffmpeg-source.tar.gz
