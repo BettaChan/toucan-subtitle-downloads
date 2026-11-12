@@ -4,16 +4,20 @@ on:
   push:
     branches: [build/windows-package-check]
     paths: [.github/workflows/windows-package-check.yml]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
   validate:
+    if: github.event_name == 'push' && github.run_attempt == 1
+    permissions:
+      contents: write
     runs-on: windows-2022
     timeout-minutes: 22
     steps:
-      - name: Read private draft assets from this repository
+      - name: Download draft assets and revoke the job token
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -30,7 +34,7 @@ jobs:
           for ($i = 0; $i -lt 30; $i++) {
             $releases = gh api "repos/$env:GITHUB_REPOSITORY/releases?per_page=50" | ConvertFrom-Json
             $draft = @($releases | Where-Object { $_.draft -and $_.name -match '1[.]2[.]02' })
-            if ($draft.Count -ne 1) { throw 'The read-only runner could not identify the 1.2.02 release draft.' }
+            if ($draft.Count -ne 1) { throw 'The runner could not identify the 1.2.02 release draft.' }
             $assets = @($draft[0].assets | Where-Object { $checksums.ContainsKey($_.name) -and $_.state -eq 'uploaded' })
             if ($assets.Count -eq 2) { break }
             Start-Sleep -Seconds 20
@@ -43,7 +47,9 @@ jobs:
               throw "Unexpected candidate checksum: $($asset.name)"
             }
           }
-          'Both draft asset checksums matched.'
+          curl.exe --fail --silent --show-error --request DELETE --header "Authorization: Bearer $env:GH_TOKEN" "$env:GITHUB_API_URL/installation/token"
+          Remove-Item Env:GH_TOKEN
+          'Draft asset checksums matched. The job token was revoked before running the installers.'
           "TOUCAN_CHECK=$candidate" >> $env:GITHUB_ENV
 
       - name: Install, launch, run offline diagnostics, and transcribe
