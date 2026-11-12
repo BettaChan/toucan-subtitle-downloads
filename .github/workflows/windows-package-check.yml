@@ -1,9 +1,6 @@
 name: Validate 1.2.02 Windows candidates
 
 on:
-  push:
-    branches: [build/windows-package-check]
-    paths: [.github/workflows/windows-package-check.yml]
   workflow_dispatch:
 
 permissions:
@@ -11,13 +8,10 @@ permissions:
 
 jobs:
   validate:
-    if: github.event_name == 'push' && github.run_attempt == 1
-    permissions:
-      contents: write
     runs-on: windows-2022
     timeout-minutes: 22
     steps:
-      - name: Download draft assets and revoke the job token
+      - name: Download published candidate assets
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -33,13 +27,13 @@ jobs:
           }
           for ($i = 0; $i -lt 30; $i++) {
             $releases = gh api "repos/$env:GITHUB_REPOSITORY/releases?per_page=50" | ConvertFrom-Json
-            $draft = @($releases | Where-Object { $_.draft -and $_.name -match '1[.]2[.]02' })
-            if ($draft.Count -ne 1) { throw 'The runner could not identify the 1.2.02 release draft.' }
+            $draft = @($releases | Where-Object { !$_.draft -and $_.tag_name -eq 'v1.2.02' })
+            if ($draft.Count -ne 1) { throw 'The published v1.2.02 release was not found.' }
             $assets = @($draft[0].assets | Where-Object { $checksums.ContainsKey($_.name) -and $_.state -eq 'uploaded' })
             if ($assets.Count -eq 2) { break }
             Start-Sleep -Seconds 20
           }
-          if ($assets.Count -ne 2) { throw 'Both uploaded candidate assets were not visible to the runner.' }
+          if ($assets.Count -ne 2) { throw 'Both published candidate assets were not visible to the runner.' }
           foreach ($asset in $assets) {
             $path = Join-Path $candidate $asset.name
             curl.exe --fail --silent --show-error --location --max-time 300 --output $path               --header "Authorization: Bearer $env:GH_TOKEN" --header 'Accept: application/octet-stream'               "$env:GITHUB_API_URL/repos/$env:GITHUB_REPOSITORY/releases/assets/$($asset.id)"
@@ -47,9 +41,7 @@ jobs:
               throw "Unexpected candidate checksum: $($asset.name)"
             }
           }
-          curl.exe --fail --silent --show-error --request DELETE --header "Authorization: Bearer $env:GH_TOKEN" "$env:GITHUB_API_URL/installation/token"
-          Remove-Item Env:GH_TOKEN
-          'Draft asset checksums matched. The job token was revoked before running the installers.'
+          'Both draft asset checksums matched.'
           "TOUCAN_CHECK=$candidate" >> $env:GITHUB_ENV
 
       - name: Install, launch, run offline diagnostics, and transcribe
