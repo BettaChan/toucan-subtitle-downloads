@@ -1,0 +1,80 @@
+name: Build NumPy 2.5.2 for Windows x64
+
+on:
+  push:
+    branches: [build/numpy-2.5.2-win-x64]
+    paths: [.github/workflows/windows-numpy-build.yml]
+
+permissions:
+  contents: read
+
+jobs:
+  wheel:
+    runs-on: windows-2022
+    timeout-minutes: 35
+    env:
+      CIBW_BUILD: cp312-win_amd64
+      CIBW_ARCHS_WINDOWS: AMD64
+      CIBW_TEST_SKIP: cp312-win_amd64
+      CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: >-
+        delvewheel repair --add-path .openblas/lib --exclude "msvcp140.dll;msvcp140_1.dll;msvcp140_2.dll;msvcp140_atomic_wait.dll;msvcp140_codecvt_ids.dll;vcruntime140.dll;vcruntime140_1.dll;vcruntime140_threads.dll;concrt140.dll;vcomp140.dll" -w {dest_dir} {wheel}
+    steps:
+      - name: Fetch upstream NumPy 2.5.2 and build submodules
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+        with:
+          repository: numpy/numpy
+          ref: 48fecee5453aa1d31e6b79dcb3969dc1a6d1a891
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Configure OpenBLAS discovery
+        shell: pwsh
+        run: |
+          $openblas = "$env:GITHUB_WORKSPACE/.openblas".Replace('\', '/')
+          "CIBW_ENVIRONMENT_WINDOWS=PKG_CONFIG_PATH=$openblas" >> $env:GITHUB_ENV
+
+      - name: Compile and repair the wheel
+        uses: pypa/cibuildwheel@1828c10ab37f080699c7b81cea34097c684a7074
+
+      - name: Check wheel contents and native execution
+        shell: pwsh
+        run: |
+          $wheels = @(Get-ChildItem wheelhouse/numpy-2.5.2-cp312-cp312-win_amd64.whl)
+          if ($wheels.Count -ne 1) { throw 'Expected exactly one Windows x64 CPython 3.12 wheel' }
+          $wheel = $wheels[0].FullName
+          Get-FileHash $wheel -Algorithm SHA256 | Format-List
+          py -3.12 -m venv "$env:RUNNER_TEMP/wheel-test"
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          $python = "$env:RUNNER_TEMP/wheel-test/Scripts/python.exe"
+          @'
+          import re, sys, zipfile
+          from pathlib import PurePosixPath
+          with zipfile.ZipFile(sys.argv[1]) as wheel:
+              dlls = [PurePosixPath(p).name.lower() for p in wheel.namelist() if p.lower().endswith('.dll')]
+              assert any('openblas' in p for p in dlls), dlls
+              assert not any(re.match(r'(?:msvcp140|vcruntime140|concrt140|vcomp140)', p) for p in dlls), dlls
+              print('Wheel DLLs:', dlls)
+          '@ | & $python - $wheel
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          & $python -m pip install --no-index --no-deps $wheel
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+          @'
+          import struct, sys
+          import numpy as np
+          assert sys.version_info[:2] == (3, 12) and struct.calcsize('P') == 8
+          assert np.__version__ == '2.5.2'
+          a = np.arange(64.0).reshape(8, 8)
+          np.testing.assert_allclose((a @ a.T)[0, 0], 140.0)
+          np.testing.assert_allclose(np.fft.ifft(np.fft.fft(a[0])).real, a[0], atol=1e-12)
+          np.show_config()
+          print('Windows x64 import, matrix multiplication, and FFT passed')
+          '@ | & $python -I -
+          if ($LASTEXITCODE) { exit $LASTEXITCODE }
+
+      - name: Save the verified wheel
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: numpy-2.5.2-cp312-win-amd64
+          path: wheelhouse/numpy-2.5.2-cp312-cp312-win_amd64.whl
+          if-no-files-found: error
+          retention-days: 3
