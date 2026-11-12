@@ -4,7 +4,7 @@
 
 ## 下载与安装
 
-版本附件发布后可从 [GitHub Releases](https://github.com/BettaChan/dazui-subtitle-downloads/releases) 获取。[版本记录](CHANGELOG.md) · [1.2.02 SHA-256](SHA256SUMS.txt)
+版本附件发布后可从 [GitHub Releases](https://github.com/BettaChan/toucan-subtitle-downloads/releases) 获取。[版本记录](CHANGELOG.md) · [1.2.02 SHA-256](SHA256SUMS.txt)
 
 | 平台 | 包 | 安装方法 |
 | --- | --- | --- |
@@ -29,6 +29,6 @@ Windows 若提示缺少 Visual C++ x64 运行库，可从[微软官方页面](ht
 
 ## 反馈与许可
 
-可在 [Issues](https://github.com/BettaChan/dazui-subtitle-downloads/issues) 提交应用版本、系统版本、复现步骤和报错文字。请先检查截图和日志中的本地路径、字幕、账号或密钥。
+可在 [Issues](https://github.com/BettaChan/toucan-subtitle-downloads/issues) 提交应用版本、系统版本、复现步骤和报错文字。请先检查截图和日志中的本地路径、字幕、账号或密钥。
 
-应用及第三方组件的许可可从「帮助 → 关于 → 第三方许可」查看。转写 FFmpeg 的对应源码与构建资料随版本提供。
+应用及第三方组件的许可可从「帮助 → 关于 → 第三方许可」查看。转写 FFmpeg 和 Electron 播放库的对应源码、构建资料及许可随版本提供。
