@@ -1,5 +1,9 @@
 # Toucan Subtitle · 大嘴鸟字幕
 
+[![Official website: toucansub.app](https://img.shields.io/badge/Official%20website-toucansub.app-0969da?style=for-the-badge)](https://toucansub.app/)
+
+**Local Whisper GUI for macOS & Windows**
+
 [English](README.md) · [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Русский](README.ru.md) · [ไทย](README.th.md)
 
 Toucan Subtitle is a desktop app that transcribes audio and video locally with Whisper and can translate subtitles through a service you configure.
