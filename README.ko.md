@@ -33,6 +33,4 @@ Visual C++ x64 런타임이 없다는 메시지가 표시되면 [Microsoft](http
 
 ## 1.2.02 · 릴리스 후보
 
-전사용 FFmpeg / FFprobe를 8.1.3으로 업데이트하고 포함된 런타임의 용량을 줄였습니다. 전사 도구와 Electron 재생 라이브러리의 소스 코드를 릴리스에 첨부했습니다. Windows용 NumPy 2.5.2는 소스에서 다시 빌드했으며 시스템의 Visual C++ x64 런타임을 사용합니다. 패키지 4개와 소스 아카이브 2개가 다운로드 및 SHA-256 검증을 통과했습니다. 두 Windows 패키지는 시작, 오프라인 음성 구간 감지 및 실제 음성 전사도 통과했습니다. macOS 앱에는 애드혹 서명이 적용되었으며 Apple 공증은 아직 받지 않았습니다. Windows 패키지는 서명되지 않았습니다.
-
-[Windows x64](https://github.com/BettaChan/toucan-subtitle-downloads/actions/runs/43328309404) · [macOS / FFmpeg](https://github.com/BettaChan/toucan-subtitle-downloads/actions/runs/43330776354)
+전사용 FFmpeg / FFprobe를 8.1.3으로 업데이트하고 포함된 런타임의 용량을 줄였습니다. 전사 도구와 Electron 재생 라이브러리의 소스 코드를 릴리스에 첨부했습니다. Windows용 NumPy 2.5.2는 소스에서 다시 빌드했으며 시스템의 Visual C++ x64 런타임을 사용합니다. 도움말의 정보 화면에서 수동으로 업데이트를 확인할 수 있습니다. 최신 패키지 4개와 소스 아카이브 2개의 SHA-256을 로컬에서 검증했습니다. macOS 앱은 로컬 실행 테스트를 통과했습니다. 새 Windows 패키지의 설치, 실행 및 전사는 재시험을 기다리고 있습니다. macOS 앱에는 애드혹 서명이 적용되었으며 Apple 공증은 아직 받지 않았습니다. Windows 패키지는 서명되지 않았습니다.

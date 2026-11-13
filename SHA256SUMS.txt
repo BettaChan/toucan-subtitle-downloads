@@ -1,6 +1,6 @@
-52e0239c97a57b271d91f1cf2d8c6a17a7d4d4eeb5fc17470787df9c8d48b51c  DazuiSubtitle-1.2.02-mac-arm64.dmg
-d357af58aa1f7d29b18e0780cefdabca63acff91f6bc28e8f8aaf1ca130f691a  DazuiSubtitle-1.2.02-mac-arm64.zip
-6aeda4adc93db4cff8576227f2bc94074d91294e7d43b65d1a4f1abbdd0aecff  DazuiSubtitle-1.2.02-windows-x64-rebuilt.exe
-de4e9197447b1c93f29fd4f173d9dd33a4c71bb2b928e99807446137e8bf3bf4  DazuiSubtitle-1.2.02-windows-x64-rebuilt.zip
+1ac10b9b10427f7b325f9225cb8a297576f71f59fa9024deed17263ad6de91a0  ToucanSubtitle-1.2.02-mac-arm64.dmg
+51c0bbbff3dad0fe766a239e12a8493b66b68eca3c5a4045ce9ac226f159a2bf  ToucanSubtitle-1.2.02-mac-arm64.zip
+3dc0786c78b6146f6e26d244ceb9b15e75af2d7e20e65fc3303a0531e0b2ee82  ToucanSubtitle-1.2.02-windows-x64.exe
+088c062606dff6981c3ebeab6d7b4ea3f95c013adaaaf977f0889e9e75d8c930  ToucanSubtitle-1.2.02-windows-x64.zip
 e15f618c55d2ebe4b54dba048084132cc7846a3c761ec63e4d145050a851224a  ffmpeg-source-1.2.02.zip
 54bd54be5325af9163b6ccbda2a4ca665e0e97e2f643b5e9d8004407b827d076  electron-44.0.0-ffmpeg-source.tar.gz

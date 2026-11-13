@@ -5,9 +5,9 @@
 ## 1.2.02 · Release candidate
 
 - Uses a standalone FFmpeg / FFprobe 8.1.3 build for transcription under LGPL 2.1 or later.
-- Slimmed the bundled runtimes. The macOS DMG / ZIP are about 289.6 / 291.0 MiB. The Windows EXE / ZIP are about 145.0 / 200.9 MiB.
-- Added app and third-party licenses under Help → About.
+- Slimmed the bundled runtimes. The macOS DMG / ZIP are about 258.4 / 293.7 MiB. The Windows EXE / ZIP are about 144.9 / 200.8 MiB.
+- Added app and third-party licenses and a manual Check for Updates under Help → About.
 - Rebuilt NumPy 2.5.2 from source for Windows. It uses Microsoft's system Visual C++ x64 runtime. OpenBLAS notices and the engine diagnostic are included.
-- Both platforms passed archive integrity checks. The rebuilt Windows installer and portable ZIP passed download checks, startup, offline VAD, and speech transcription on a Windows x64 runner. The macOS build is ad-hoc signed and awaits notarization. The Windows build is unsigned.
+- Both platforms passed local archive integrity checks. The macOS app passed a local startup test and is ad-hoc signed, with Apple notarization pending. The Windows packages are unsigned and await native installation, startup, and transcription retesting.
 - The Release includes corresponding source for the transcription tools and for Electron's FFmpeg playback library.
-- Both macOS packages and both FFmpeg source archives passed SHA-256 verification after download from GitHub.
+- Local SHA-256 verification passed for the four current packages and both FFmpeg source archives.

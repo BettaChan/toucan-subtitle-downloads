@@ -33,6 +33,4 @@
 
 ## 1.2.02 · 發佈候選
 
-更新了轉寫工具 FFmpeg / FFprobe 8.1.3，精簡了執行環境，並隨 Release 提供轉寫工具和 Electron 播放程式庫的對應原始碼。Windows 重新建置 NumPy 2.5.2，使用系統的 Visual C++ x64。四份安裝包和兩份原始碼包皆通過下載和 SHA-256 校驗。Windows 安裝版與免安裝版另通過啟動、離線語音偵測及實際轉寫。macOS 為臨時簽署，尚未取得 Apple 公證。Windows 套件尚未簽署。
-
-[Windows x64](https://github.com/BettaChan/toucan-subtitle-downloads/actions/runs/43328309404) · [macOS / FFmpeg](https://github.com/BettaChan/toucan-subtitle-downloads/actions/runs/43330776354)
+更新了轉寫工具 FFmpeg / FFprobe 8.1.3，精簡了執行環境，並隨 Release 提供轉寫工具和 Electron 播放程式庫的對應原始碼。Windows 重新建置 NumPy 2.5.2，使用系統的 Visual C++ x64。「說明 → 關於」新增手動檢查更新。四份新版安裝包和兩份原始碼包均通過本機 SHA-256 校驗。macOS 應用程式已通過本機啟動測試。新版 Windows 安裝、啟動及實際轉寫待複測。macOS 採用 ad-hoc 簽署，尚未取得 Apple 公證。Windows 套件尚未簽署。

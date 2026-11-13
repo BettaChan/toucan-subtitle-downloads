@@ -38,10 +38,10 @@ Windows 若提示缺少 Visual C++ x64 运行库，可从[微软官方页面](ht
 ## 1.2.02 · 发布候选
 
 - 转写工具改用独立构建的 FFmpeg / FFprobe 8.1.3，采用 LGPL 2.1 或更新版本。
-- 精简了随包运行库。Mac DMG / ZIP 约 289.6 / 291.0 MiB，Windows EXE / ZIP 约 145.0 / 200.9 MiB。
-- 「帮助 → 关于」加入应用授权与第三方许可入口。
+- 精简了随包运行库。Mac DMG / ZIP 约 258.4 / 293.7 MiB，Windows EXE / ZIP 约 144.9 / 200.8 MiB。
+- 「帮助 → 关于」加入应用授权、第三方许可入口和手动检查更新。
 - Windows 从源码重建 NumPy 2.5.2，使用微软 Visual C++ x64 系统运行库，保留 OpenBLAS 许可与引擎诊断。
-- 两个平台的归档通过解包和内容一致性检查。Windows 两个新版包在 Windows x64 runner 上通过下载校验、启动、离线 VAD 和真实音频转写。Mac 使用 ad-hoc 签名，尚无 Apple 公证。Windows 未做发行者签名。
+- 两个平台的归档通过本地完整性检查。macOS 应用通过本地启动测试，采用 ad-hoc 签名，尚无 Apple 公证。Windows 包未签名，安装、启动和实际转写待复测。
 - 随 Release 提供转写 FFmpeg 和 Electron 播放库各自的对应源码。
 
-macOS DMG、ZIP 和两份 FFmpeg 源码包从 GitHub 下载后通过了 SHA-256 校验。
+四份新版安装包和两份 FFmpeg 源码包均通过本地 SHA-256 校验。
