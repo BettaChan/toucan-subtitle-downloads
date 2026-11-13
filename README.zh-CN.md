@@ -6,7 +6,7 @@
 
 ## 下载与安装
 
-版本附件发布后可从 [GitHub Releases](https://github.com/BettaChan/toucan-subtitle-downloads/releases) 获取。[版本记录](CHANGELOG.md) · [1.2.02 SHA-256](SHA256SUMS.txt)
+从 [GitHub 最新正式版](https://github.com/BettaChan/toucan-subtitle-downloads/releases/latest) 或[官网下载页](https://toucansub.app/downloads.html#platforms)选择安装包。[版本记录](CHANGELOG.md) · [1.2.03 SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.03/SHA256SUMS-ToucanSubtitle-1.2.03.txt)
 
 | 平台 | 包 | 安装方法 |
 | --- | --- | --- |
@@ -24,9 +24,9 @@ Windows 若提示缺少 Visual C++ x64 运行库，可从[微软官方页面](ht
 
 ## 校验安装包
 
-请按文件名对照对应 Release 中的 SHA-256。下载了 `SHA256SUMS.txt` 列出的所有文件时，可把文件与校验清单放在同一目录批量核对。
+请按文件名对照对应 Release 中的 SHA-256。下载了 `SHA256SUMS-ToucanSubtitle-1.2.03.txt` 列出的所有文件时，可把文件与校验清单放在同一目录批量核对。
 
-- macOS 可运行 `shasum -a 256 -c SHA256SUMS.txt`。如果只下载了一个安装包，可运行 `shasum -a 256 <文件名>` 并对照该行。
+- macOS 可运行 `shasum -a 256 -c SHA256SUMS-ToucanSubtitle-1.2.03.txt`。如果只下载了一个安装包，可运行 `shasum -a 256 <文件名>` 并对照该行。
 - Windows PowerShell 可运行 `Get-FileHash -Algorithm SHA256 <文件名>` 并对照该行。
 
 ## 反馈与许可
