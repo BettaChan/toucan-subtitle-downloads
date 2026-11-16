@@ -2,6 +2,20 @@
 
 [简体中文](README.zh-CN.md) · [繁體中文](README.zh-TW.md) · [Deutsch](README.de.md) · [Français](README.fr.md) · [日本語](README.ja.md) · [한국어](README.ko.md) · [Русский](README.ru.md) · [ไทย](README.th.md)
 
+## 1.2.05 · 2026-11-15
+
+- The first-run wizard follows the system language and guides users through setup checks, Whisper model preparation, and the choice of transcription or translation.
+- 首次启动向导跟随系统语言，引导用户检查环境、准备 Whisper 模型，并选择仅转写或转写并翻译。
+
+[Release / 发布附件](https://github.com/BettaChan/toucan-subtitle-downloads/releases/tag/v1.2.05) · [SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.05/SHA256SUMS-ToucanSubtitle-1.2.05.txt)
+
+## 1.2.04 · 2026-11-13
+
+- Added background update checks at startup and localized the macOS app name and Windows installer.
+- 新增启动时后台检查更新，macOS 应用名称与 Windows 安装界面随系统语言显示。
+
+[Release / 发布附件](https://github.com/BettaChan/toucan-subtitle-downloads/releases/tag/v1.2.04) · [SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.04/SHA256SUMS-ToucanSubtitle-1.2.04.txt)
+
 ## 1.2.03 · 2026-11-13
 
 - Added a recovery guide for Whisper downloads, with HF-Mirror retry and links to model files on ModelScope.

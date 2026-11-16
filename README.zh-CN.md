@@ -6,7 +6,7 @@
 
 ## 下载与安装
 
-从 [GitHub 最新正式版](https://github.com/BettaChan/toucan-subtitle-downloads/releases/latest) 或[官网下载页](https://toucansub.app/downloads.html#platforms)选择安装包。[版本记录](CHANGELOG.md) · [1.2.03 SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.03/SHA256SUMS-ToucanSubtitle-1.2.03.txt)
+从 [GitHub 最新正式版](https://github.com/BettaChan/toucan-subtitle-downloads/releases/latest) 或[官网下载页](https://toucansub.app/downloads.html#platforms)选择安装包。[版本记录](CHANGELOG.md) · [1.2.05 SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.05/SHA256SUMS-ToucanSubtitle-1.2.05.txt)
 
 | 平台 | 包 | 安装方法 |
 | --- | --- | --- |

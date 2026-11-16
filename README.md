@@ -10,7 +10,7 @@ Toucan Subtitle is a desktop app that transcribes audio and video locally with W
 
 ## Download and install
 
-Download the [latest release](https://github.com/BettaChan/toucan-subtitle-downloads/releases/latest) or visit the [official download page](https://toucansub.app/en/downloads.html#platforms). [Changelog](CHANGELOG.md) · [1.2.03 SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.03/SHA256SUMS-ToucanSubtitle-1.2.03.txt)
+Download the [latest release](https://github.com/BettaChan/toucan-subtitle-downloads/releases/latest) or visit the [official download page](https://toucansub.app/en/downloads.html#platforms). [Changelog](CHANGELOG.md) · [1.2.05 SHA-256](https://github.com/BettaChan/toucan-subtitle-downloads/releases/download/v1.2.05/SHA256SUMS-ToucanSubtitle-1.2.05.txt)
 
 | Platform | Package | Installation |
 | --- | --- | --- |
